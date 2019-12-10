@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>目覚まし時計</title>
+        <style>
+            h1{
+                text-align: center;
+            }
+            div{
+                background-color:rgba(255, 0, 255, 0.473);
+                width: 200px;
+                height: 80px;
+                margin: 20px auto;
+                text-align: center;
+            }
+            p{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="output1">目覚まし時計</h1>
+        <div id="box1"></div>
+
+        <p id="output2">
+            目覚める時間を設定してください<br>
+            <label>
+				<select id='alarmhrs' ></select>
+			</label>
+			<label>
+		    	<select id='alarmmins' ></select>
+			</label>
+            <button onclick="alarmSet();">設定する</button>
+            <button onclick="alarmClear();">クリアする</button>
+        </p>
+        <script>
+            const BOX1 = document.getElementById("box1");
+            setInterval(clock,1000);
+            function clock(){
+                const now = new Date();
+                let y = now.getFullYear();
+                let m = now.getMonth();
+                let d = now.getDate();
+                let w = now.getDay();
+                let h = now.getHours();
+                let i = now.getMinutes();
+                let s = now.getSeconds();
+                const week = new Array("日","月","火","水","木","金","土");
+
+                BOX1.innerHTML ="今の時間：<br>"+y+"年"+m+"月"+d+"日"+week[w]+"曜日<br>"+h+"時"+i+"分"+s+"秒";
+            }
+
+            var sound = new Audio("Alarm.mp3");
+
+            function hoursMenu(){
+                var select = document.getElementById('alarmhrs');
+                var hrs = 23
+
+                for (i=0; i <= hrs; i++) {
+                    select.options[select.options.length] = new Option( i < 10 ? "0" + i : i, i);
+                }
+            }
+            hoursMenu();
+
+            function minMenu(){
+                var select = document.getElementById('alarmmins');
+                var min = 59;
+                for (i=0; i <= min; i++) {
+                    select.options[select.options.length] = new Option(i < 10 ? "0" + i : i, i);
+                }
+            }
+            minMenu();
+
+            function alarmSet() {
+                var hr = document.getElementById('alarmhrs');
+
+                var min = document.getElementById('alarmmins');
+
+                var selectedHour = hr.options[hr.selectedIndex].value;
+                var selectedMin = min.options[min.selectedIndex].value;
+
+                var alarmTime = selectedHour + ":" + selectedMin;
+                console.log('alarmTime:' + alarmTime);
+
+                document.getElementById('alarmhrs').disabled = true;
+                document.getElementById('alarmmins').disabled = true;
+
+                var div = document.getElementById("box1");
+
+                setInterval(function() {
+                    var date = new Date();
+                    var h = date.getHours();
+                    var i = date.getMinutes();
+                    var currentTime = (box1.textContent = h + ":" + i);
+                    if (alarmTime == currentTime) {
+                        sound.play();
+                    }
+                }, 1000);
+                sound.loop = true;
+            }
+
+            function alarmClear() {
+                document.getElementById("alarmhrs").disabled = false;
+                document.getElementById("alarmmins").disabled = false;
+                sound.pause();
+                sound.loop = false;
+            }
+        </script>
+    </body>
+</html>
